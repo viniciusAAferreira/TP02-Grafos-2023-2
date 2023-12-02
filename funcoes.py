@@ -43,27 +43,15 @@ def generate_minimum_spanning_tree(graph):
     return mst, total_weight
 
 def find_minimum_cycle(graph):
-    min_cycle = None
-    min_cycle_weight = float('inf')
+    menor_ciclo = None
+    menor_soma_pesos = float('inf')
 
-    for start_node in graph.nodes():
-        visited = set()
-        stack = [(start_node, [start_node], 0)]
+    for node in graph.nodes():
+        # Aplica o algoritmo de busca em largura (BFS) para encontrar ciclos a partir de cada nó
+        for ciclo in nx.cycle_basis(graph, node):
+            soma_pesos = sum(graph[u][v]['weight'] for u, v in zip(ciclo, ciclo[1:] + [ciclo[0]]))
+            if soma_pesos < menor_soma_pesos:
+                menor_soma_pesos = soma_pesos
+                menor_ciclo = ciclo
 
-        while stack:
-            current_node, path, path_weight = stack.pop()
-
-            for neighbor, weight in graph[current_node].items():
-                if neighbor not in path:
-                    new_path = path + [neighbor]
-                    new_weight = path_weight + weight['weight']
-
-                    if new_weight < min_cycle_weight:
-                        stack.append((neighbor, new_path, new_weight))
-
-                    # Verifica se o caminho forma um ciclo menor
-                    if new_weight < min_cycle_weight and neighbor == start_node:
-                        min_cycle = new_path
-                        min_cycle_weight = new_weight
-
-    return min_cycle, min_cycle_weight
+    return menor_ciclo, menor_soma_pesos

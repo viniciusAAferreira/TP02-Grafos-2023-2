@@ -67,7 +67,7 @@ while opcao != 0:
         arvore_geradora_minima, peso_total = generate_minimum_spanning_tree(grafo)
 
         nx.write_graphml(arvore_geradora_minima, "arvore_geradoraMinima.graphml")
-        criaLayout = input("Deseja criar um layout para a árvore de busca? (S/N) ")
+        criaLayout = input("Deseja criar o layout da árvore de busca? (S/N) ")
         
         if criaLayout == "S" or criaLayout == "s":
             grafo_Busca = nx.read_graphml("arvore_geradoraMinima.graphml")
@@ -77,7 +77,11 @@ while opcao != 0:
             plt.title("Arvore Geradora Mínima")
             plt.axis('on')
             plt.show()
+
+        print("Peso total da árvore geradora mínima:", peso_total)
+        
         print("\n")
+
 
     elif opcao == 4:
         conjunto_estavel = stable_set_heuristic(grafo)

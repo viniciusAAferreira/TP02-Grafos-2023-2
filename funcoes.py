@@ -1,24 +1,91 @@
 import networkx as nx
 from networkx.algorithms.cycles import find_cycle
 
+### PRIMEIRA PARTE DO TRABALHO ###
+
+def calcular_ordem_do_grafo_graphml(grafo):
+    return grafo.number_of_nodes()
+
+def calcular_tamanho_do_grafo(grafo):
+    return grafo.number_of_edges()
+
+def encontrar_vizinhos_do_vertice(grafo, vertice):
+    vizinhos = list(grafo.neighbors(vertice))
+    return vizinhos
+
+def determinar_grau_do_vertice(grafo, vertice):
+    grau = grafo.degree(vertice)
+    return grau
+
+def calcular_sequencia_de_graus(grafo):
+    sequencia_de_graus = list(grafo.degree())
+    return sequencia_de_graus
+
+def determinar_excentricidade_do_vertice(grafo, vertice):
+    excentricidades = nx.single_source_shortest_path_length(grafo, source=vertice)
+    excentricidade = max(excentricidades.values())
+    return excentricidade
+
+def determinar_raio_do_grafo(grafo):
+    raio = nx.radius(grafo)
+    return raio
+
+def determinar_diametro_do_grafo(grafo):
+    diametro_do_grafo = nx.diameter(grafo)
+    return diametro_do_grafo
+
+def determinar_centro_do_grafo(grafo):
+    centro_do_grafo = nx.center(grafo)
+    return centro_do_grafo
+
+
+def busca_em_largura_com_arvore(grafo, vertice_inicial):
+    arvore_busca = nx.Graph()
+    fila = [vertice_inicial]
+    visitados = set(fila)
+    sequencia_vertices = []  
+    while fila:
+        vertice_atual = fila.pop(0)
+        sequencia_vertices.append(vertice_atual)
+
+        for vizinho in grafo.neighbors(vertice_atual):
+            if vizinho not in visitados:
+                visitados.add(vizinho)
+                fila.append(vizinho)
+                arvore_busca.add_edge(vertice_atual, vizinho)
+
+    # Arestas que não fazem parte da árvore de busca em largura
+    arestas_nao_arvore = list(set(grafo.edges()) - set(arvore_busca.edges()))
+
+    return arvore_busca, arestas_nao_arvore, sequencia_vertices
+
+def determinar_distancia_entre_dois_vertices(grafo, vertice_origem, vertice_destino):
+    distancia = nx.shortest_path_length(grafo, source=vertice_origem, target=vertice_destino, weight='weight')
+    
+    caminho_minimo = nx.shortest_path(grafo, source=vertice_origem, target=vertice_destino, weight='weight')
+
+    return distancia, caminho_minimo
+
+def calcular_centralidade_de_proximidade(grafo, vertice):
+    distancias = nx.single_source_shortest_path_length(grafo, vertice)
+    soma_distancias = sum(distancias.values())
+    numero_de_vertices = grafo.number_of_nodes()
+    centralidade_de_proximidade = (numero_de_vertices - 1) / soma_distancias
+    return centralidade_de_proximidade
+
+### SEGUNDA PARTE DO TRABALHO ###
 def possui_Ciclo(grafo):
         try:
-            # Tenta encontrar um ciclo no grafo
             ciclo = find_cycle(grafo, orientation='ignore')
             return True
         except nx.NetworkXNoCycle:
-            # Se não encontrar ciclo, retorna False
             return False
         
 def emparelhamento_Maximo(grafo):
-    # Encontrar o emparelhamento máximo
     matching = nx.max_weight_matching(grafo)
 
     return matching
-#1) Ordene os vértices por grau não decrescente.
-#2)Inicialize um conjunto vazio para armazenar o conjunto estável.
-#3) Itere sobre os vértices na ordem do passo 1. Para cada vértice:
-#       Adicione o vértice ao conjunto estável se ele não for adjacente a nenhum vértice já presente no conjunto estável.
+
 def stable_set_heuristic(graph):
     stable_set = set()
 
@@ -34,10 +101,8 @@ def stable_set_heuristic(graph):
     return stable_set
 
 def generate_minimum_spanning_tree(graph):
-    # Encontrar a árvore geradora mínima
     mst = nx.minimum_spanning_tree(graph)
 
-    # Calcular o peso total da árvore geradora mínima
     total_weight = sum((graph[u][v]['weight'] for u, v in mst.edges()))
 
     return mst, total_weight

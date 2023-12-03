@@ -81,12 +81,28 @@ def possui_Ciclo(grafo):
         except nx.NetworkXNoCycle:
             return False
         
-def emparelhamento_Maximo(grafo):
-    matching = nx.max_weight_matching(grafo)
+def encontrar_menor_ciclo(graph):
+    menor_ciclo = None
+    menor_soma_pesos = float('inf')
 
-    return matching
+    for node in graph.nodes():
+        # Aplica o algoritmo de busca em largura (BFS) para encontrar ciclos a partir de cada nó
+        for ciclo in nx.cycle_basis(graph, node):
+            soma_pesos = sum(graph[u][v]['weight'] for u, v in zip(ciclo, ciclo[1:] + [ciclo[0]]))
+            if soma_pesos < menor_soma_pesos:
+                menor_soma_pesos = soma_pesos
+                menor_ciclo = ciclo
 
-def stable_set_heuristic(graph):
+    return menor_ciclo, menor_soma_pesos
+
+def gerar_arvore_geradora_minima(graph):
+    mst = nx.minimum_spanning_tree(graph)
+
+    total_weight = sum((graph[u][v]['weight'] for u, v in mst.edges()))
+
+    return mst, total_weight
+
+def conjunto_estavel_heuristica(graph):
     stable_set = set()
 
     # Ordena os vértices por grau não decrescente
@@ -100,23 +116,7 @@ def stable_set_heuristic(graph):
 
     return stable_set
 
-def generate_minimum_spanning_tree(graph):
-    mst = nx.minimum_spanning_tree(graph)
+def emparelhamento_Maximo(grafo):
+    matching = nx.max_weight_matching(grafo)
 
-    total_weight = sum((graph[u][v]['weight'] for u, v in mst.edges()))
-
-    return mst, total_weight
-
-def find_minimum_cycle(graph):
-    menor_ciclo = None
-    menor_soma_pesos = float('inf')
-
-    for node in graph.nodes():
-        # Aplica o algoritmo de busca em largura (BFS) para encontrar ciclos a partir de cada nó
-        for ciclo in nx.cycle_basis(graph, node):
-            soma_pesos = sum(graph[u][v]['weight'] for u, v in zip(ciclo, ciclo[1:] + [ciclo[0]]))
-            if soma_pesos < menor_soma_pesos:
-                menor_soma_pesos = soma_pesos
-                menor_ciclo = ciclo
-
-    return menor_ciclo, menor_soma_pesos
+    return matching

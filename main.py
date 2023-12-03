@@ -145,17 +145,17 @@ while opcao != 0:
         print("\n")
 
     elif opcao == 14:
-        menor_ciclo, peso_menor_ciclo = find_minimum_cycle(grafo)
+        menor_ciclo, peso_menor_ciclo = encontrar_menor_ciclo(grafo)
 
         print("Menor ciclo:", menor_ciclo)
         print("Peso do menor ciclo:", peso_menor_ciclo)
         print("\n")
 
     elif opcao == 15:
-        arvore_geradora_minima, peso_total = generate_minimum_spanning_tree(grafo)
+        arvore_geradora_minima, peso_total = gerar_arvore_geradora_minima(grafo)
 
         nx.write_graphml(arvore_geradora_minima, "arvore_geradoraMinima.graphml")
-        criaLayout = input("Deseja criar o layout da árvore de busca? (S/N) ")
+        criaLayout = input("Deseja criar o layout da árvore geradora mínima? (S/N) ")
         
         if criaLayout == "S" or criaLayout == "s":
             grafo_Busca = nx.read_graphml("arvore_geradoraMinima.graphml")
@@ -167,12 +167,11 @@ while opcao != 0:
             plt.show()
 
         print("Peso total da árvore geradora mínima:", peso_total)
-        
         print("\n")
 
 
     elif opcao == 16:
-        conjunto_estavel = stable_set_heuristic(grafo)
+        conjunto_estavel = conjunto_estavel_heuristica(grafo)
         print("Conjunto Estável:", conjunto_estavel)
         print("\n")
     

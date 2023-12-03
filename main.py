@@ -13,7 +13,13 @@ try:
     opcao = -1
 
     # Cria um layout para o grafo
-    pos = nx.planar_layout(grafo)
+    is_planar, embedding = nx.check_planarity(grafo)
+
+    if(is_planar):
+        pos = nx.planar_layout(grafo)  
+    else:
+        pos = nx.spring_layout(grafo)
+        
 
 except (IOError, FileNotFoundError) as e:
     print(f"Erro na leitura do arquivo: {e}")
